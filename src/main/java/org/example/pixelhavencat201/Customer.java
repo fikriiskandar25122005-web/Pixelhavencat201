@@ -14,4 +14,8 @@ public class Customer {
     // Getters - These allow the JSP to display the name
     public String getFullName() { return fullName; }
     public String getEmail() { return email; }
+    @Override
+    public String toString() {
+        return this.fullName; // This tells Java to print the name, not the ID
+    }
 }

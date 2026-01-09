@@ -1,22 +1,33 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>JSP - Hello World</title>
+    <meta charset="UTF-8">
+    <title>Pixel Haven | Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="Style.css">
 </head>
-<body>
-<%
-    // This looks into the "Session memory" for the user you just registered
-    Object user = session.getAttribute("user");
-    if (user != null) {
-%>
-<div style="background-color: #d4edda; color: #155724; padding: 10px; border: 1px solid #c3e6cb;">
-    <strong>Success!</strong> Welcome to Pixel Haven, <%= user.toString() %>
+<body class="bg-primary">
+<div class="login-container">
+    <div class="login-image">
+        <img src="images/loginreg.jpg" alt="Login Illustration">
+    </div>
+
+    <div class="login-form">
+        <small class="text-end d-block">Don't have an account? <a href="registration.jsp">Register</a></small>
+
+        <h2 class="mt-5 fw-bold">Welcome Back</h2>
+        <p class="text-muted mb-4">Log in to your Pixel Haven account.</p>
+
+        <form action="LoginServlet" method="post">
+            <label class="mb-1">Email</label>
+            <input type="email" name="email" class="form-control mb-3" placeholder="name@example.com" required>
+
+            <label class="mb-1">Password</label>
+            <input type="password" name="password" class="form-control mb-4" placeholder="Enter password" required>
+
+            <button type="submit" class="btn-login">Login</button>
+        </form>
+    </div>
 </div>
-<% } %>
-<h1><%= "Login & Registration Page" %>
-</h1>
-<br/>
-<a href="registration.jsp">Go to Registration Page</a>
 </body>
 </html>

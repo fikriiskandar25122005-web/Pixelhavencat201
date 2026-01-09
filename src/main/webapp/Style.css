@@ -1,0 +1,52 @@
+body {
+    background-color: #5d7cf3;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-container {
+    display: flex;
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    width: 900px;
+    /* Removed min-height so it stays small */
+}
+
+.login-image {
+    flex: 1.2;
+}
+
+.login-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.login-form {
+    flex: 1;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-control {
+    background-color: #f1f3f4;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.btn-login {
+    background-color: #5d7cf3;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    width: 100%;
+}

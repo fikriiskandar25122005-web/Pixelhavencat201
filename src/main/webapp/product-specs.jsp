@@ -85,34 +85,43 @@
         <div class="product-desc"><%= p.getDescription() %></div>
 
         <h3>Technical Specifications</h3>
+
         <table class="spec-table">
             <tr>
-                <td class="spec-label">Series</td>
-                <td class="spec-value"><%= p.getSeries() %></td>
+                <td class="spec-label">Display</td>
+                <td class="spec-value"><%= p.getDisplaySpecs() %></td>
             </tr>
+
             <tr>
-                <td class="spec-label">Starting Price</td>
-                <td class="spec-value">RM <%= String.format("%.2f", p.getDefaultPrice()) %></td>
+                <td class="spec-label">Dimensions</td>
+                <td class="spec-value"><%= p.getDimensionsSpecs() %></td>
             </tr>
+
             <tr>
-                <td class="spec-label">Colors</td>
+                <td class="spec-label">Battery</td>
+                <td class="spec-value"><%= p.getBatterySpecs() %></td>
+            </tr>
+
+            <tr>
+                <td class="spec-label">Rear Camera</td>
+                <td class="spec-value"><%= p.getRearCameraSpecs() %></td>
+            </tr>
+
+            <tr>
+                <td class="spec-label">Front Camera</td>
+                <td class="spec-value"><%= p.getFrontCameraSpecs() %></td>
+            </tr>
+
+            <tr>
+                <td class="spec-label">Options</td>
                 <td class="spec-value">
-                    <% for(String color : p.getColorNames()) { %>
-                    <span style="display:inline-block; padding: 4px 10px; background:#f0f0f0; border-radius:12px; margin-right:5px; margin-bottom:5px; font-size:12px;"><%= color %></span>
-                    <% } %>
-                </td>
-            </tr>
-            <tr>
-                <td class="spec-label">Storage</td>
-                <td class="spec-value">
-                    <% for(String storage : p.getStorage()) { %>
-                    <span style="display:inline-block; padding: 4px 10px; border:1px solid #ddd; border-radius:12px; margin-right:5px; font-size:12px;"><%= storage %></span>
-                    <% } %>
+                    <strong>Storage:</strong> <%= String.join(", ", p.getStorage()) %><br>
+                    <strong>Colors:</strong> <%= String.join(", ", p.getColorNames()) %>
                 </td>
             </tr>
         </table>
 
-        <a href="catalog.jsp" class="btn-back">← Back to Catalog</a>
+        <a href="catalog" class="btn-back">← Back to Catalog</a>
 
         <form action="addToCart" method="post" style="display:inline;">
             <input type="hidden" name="productId" value="<%= p.getId() %>">

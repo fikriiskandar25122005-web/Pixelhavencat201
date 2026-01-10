@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="style.css">
     <title>Pixel Haven | Offers</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 
@@ -166,15 +167,33 @@
 <body>
 
 
-<div class="navbar">
-    <div class="logo">Pixel Haven</div>
-    <div class="search-bar">
-        <form action="search" method="get">
-            <input type="text" name="query" placeholder="Search Pixel..." required>
-            <button type="submit" class="search-btn">Search</button>
-        </form>
+<nav class="navbar">
+    <a href="index.jsp" class="logo">Pixel Haven</a>
+
+    <div class="nav-links">
+        <a href="index.jsp" class="nav-item">Home</a>
+        <a href="productList" class="nav-item active">Products</a>
     </div>
-</div>
+
+    <div class="nav-actions">
+        <form action="search" method="get" style="display:flex; align-items:center;">
+            <input type="text" name="query" placeholder="Search" style="padding:6px 12px; border-radius:20px; border:1px solid #ccc; font-size:13px; outline:none;">
+        </form>
+
+        <a href="cart.jsp" class="nav-action">Cart</a>
+
+        <%
+            String username = (String) session.getAttribute("username");
+            if (username == null) {
+        %>
+        <a href="login.jsp" class="nav-action">Sign In</a>
+        <a href="register.jsp" class="btn-signup">Sign Up</a>
+        <% } else { %>
+        <span class="welcome-text">Hi, <%= username %></span>
+        <a href="logout" class="nav-action">Logout</a>
+        <% } %>
+    </div>
+</nav>
 
 
 <div class="container">

@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact name="Web">
+    <output-path>$PROJECT_DIR$/out/artifacts/Web</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="Pixelhavencat201/web/Web" />
+      <element id="module-output" name="Pixelhavencat201" />
+    </root>
+  </artifact>
+</component>

@@ -1,8 +1,8 @@
-package org.example.pixelhavencat201.admin;
+package org.example.pixelhavencat201;
 
 public class Admin {
-    private String username;
-    private String password;
+    private final String username;
+    private final String password;
 
     public Admin(String username, String password) {
         this.username = username;

@@ -1,100 +1,222 @@
-<%@ page import="org.example.pixelhavencat201.Cart" %>
-<%@ page import="org.example.pixelhavencat201.CartItem" %>
-<%@ page import="java.util.ArrayList" %>
-
-<%
-    Cart cart = (Cart) session.getAttribute("cart");
-    if(cart == null){
-        cart = new Cart();
-        session.setAttribute("cart", cart);
-    }
-%>
-
-<html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <title>Your Cart | Pixel Haven</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #f9f9f9; color: #111; margin: 0; }
+
+        /* --- NAVBAR STYLES --- */
+        .navbar {
+            background: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #eee;
+        }
+        .logo { font-size: 20px; font-weight: 700; color: #000; text-decoration: none; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-item { text-decoration: none; color: #5f6368; font-weight: 500; font-size: 14px; text-transform: uppercase; }
+        .nav-item:hover, .nav-item.active { color: #000; }
+        .user-actions { display: flex; align-items: center; }
+        .nav-action { text-decoration: none; color: #000; font-weight: 500; font-size: 14px; }
+        .user-greeting { font-size: 14px; color: #333; font-weight: 500; margin-right: 15px; }
+
+        /* --- CART CONTAINER --- */
+        .cart-container {
+            max-width: 1200px;
+            width: 90%;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        h2 { margin-bottom: 20px; font-size: 24px; }
+
+        /* Styles for items injected by JS */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+        }
+
+        .item-info { display: flex; align-items: center; gap: 20px; flex: 1; }
+        .item-img { width: 80px; height: 80px; object-fit: contain; }
+        .item-details h4 { margin: 0 0 5px 0; font-size: 18px; }
+        .item-details p { margin: 0; color: #666; font-size: 14px; }
+
+        .item-actions { display: flex; align-items: center; gap: 30px; }
+        .item-price { font-weight: 700; font-size: 16px; }
+        .btn-remove { color: #d93025; border:none; background:none; cursor:pointer; font-size: 14px; font-weight: 500; }
+        .btn-remove:hover { text-decoration: underline; }
+
+        .cart-summary {
+            margin-top: 30px;
+            text-align: right;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+            display: none; /* Hidden by default, shown if cart has items */
+        }
+        .total-price { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+
+        .btn-checkout {
+            background-color: #000;
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .btn-checkout:hover { background-color: #333; }
+
+        .empty-msg {
+            text-align: center;
+            padding: 60px;
+            color: #666;
+            font-size: 18px;
+            display: none; /* Hidden by default */
+        }
+    </style>
 </head>
 <body>
 
-<nav>
-    <div class="brand">Pixel Haven</div>
-    <div>
-        <a href="index.jsp">Home</a>
-        <a href="cart.jsp">My Cart</a>
+<nav class="navbar">
+    <div class="logo">Pixel Haven</div>
+    <div class="nav-links">
+        <a href="index.jsp" class="nav-item">HOME</a>
+        <a href="productList" class="nav-item">PRODUCTS</a>
+        <a href="cart.jsp" class="nav-item active">CART</a>
+        <%
+            String currentUser = (String) session.getAttribute("username");
+            if ("admin1@gmail.com".equals(currentUser)) {
+        %>
+        <a href="admin.jsp" class="nav-item" style="color: #d93025; font-weight: bold;">ADMIN PANEL</a>
+        <% } %>
+    </div>
+    <div class="user-actions">
+        <% if (currentUser != null) { %>
+        <span class="user-greeting"><%= currentUser %></span>
+        <a href="logout" class="nav-action">Logout</a>
+        <% } else { %>
+        <a href="login.jsp" class="nav-action">Log In</a>
+        <% } %>
     </div>
 </nav>
 
-<div class="container">
-    <div class="text-center" style="margin-bottom: 30px;">
-        <h1>Your Shopping Cart</h1>
-        <p>Review your selected devices before checkout.</p>
+<div class="cart-container">
+    <h2>Your Cart</h2>
+
+    <div id="cart-items-list"></div>
+
+    <div id="cart-summary" class="cart-summary">
+        <div class="total-price">Total: RM <span id="total-amount">0.00</span></div>
+        <a href="#" onclick="alert('Proceeding to checkout... (Demo Only)'); return false;" class="btn-checkout">Checkout</a>
     </div>
 
-    <% if (cart.isEmpty()) { %>
-    <div class="product-card text-center" style="padding: 50px;">
-        <h2 style="color: #5f6368;">Your cart is empty</h2>
-        <p>Looks like you haven't chosen a Pixel yet.</p>
-        <br>
-        <a href="index.jsp"><button>Browse Phones</button></a>
+    <div id="empty-cart-msg" class="empty-msg">
+        <p>Your cart is empty.</p>
+        <a href="productList" style="color: #1a73e8; text-decoration: none; font-weight: 500;">Continue Shopping</a>
     </div>
-    <% } else { %>
-
-    <div style="background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-
-        <table>
-            <thead>
-            <tr>
-                <th style="width: 5%;">No.</th>
-                <th style="width: 40%;">Item</th>
-                <th style="width: 20%;">Price</th>
-                <th style="width: 15%;">Qty</th>
-                <th style="width: 20%;">Total</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <%
-                ArrayList<CartItem> items = cart.getItems();
-                for(int i=0; i<items.size(); i++){
-                    CartItem item = items.get(i);
-            %>
-            <tr>
-                <td><%= i+1 %></td>
-                <td>
-                    <div style="font-weight: bold; font-size: 1.1em;"><%= item.getName() %></div>
-                </td>
-                <td>RM <%= item.getPrice() %></td>
-                <td><%= item.getQuantity() %></td>
-                <td style="font-weight: bold; color: #1a73e8;">RM <%= item.getTotalPrice() %></td>
-                <td>
-                    <form method="get" action="CartServlet" style="margin: 0;">
-                        <input type="hidden" name="remove" value="<%= i %>">
-                        <button type="submit" style="background-color: #d93025; padding: 6px 15px; font-size: 0.9rem;">Remove</button>
-                    </form>
-                </td>
-            </tr>
-            <% } %>
-            </tbody>
-        </table>
-
-        <div style="margin-top: 30px; display: flex; justify-content: flex-end; align-items: center; border-top: 1px solid #eee; padding-top: 20px;">
-            <div style="text-align: right;">
-                <h2 style="margin: 0; font-size: 2em;">Total: RM <%= cart.getTotal() %></h2>
-                <div style="margin-top: 20px;">
-                    <a href="index.jsp" style="margin-right: 20px; color: #5f6368; font-weight: 600;">Continue Shopping</a>
-                    <form method="post" action="CheckoutServlet" style="display: inline;">
-                        <button type="submit" style="font-size: 1.1em; padding: 12px 40px;">Proceed to Checkout</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <% } %>
 </div>
 
-<script src="js/cart.js"></script>
+<script>
+    // 1. Helper to get the correct key
+    function getCartKey() {
+        // We use an empty string as fallback to avoid "null" being part of the string
+        const user = "<%= (session.getAttribute("username") != null) ? session.getAttribute("username") : "" %>";
+
+        if (user === "") {
+            return 'pixelhaven_cart_guest';
+        } else {
+            return 'pixelhaven_cart_' + user;
+        }
+    }
+
+    function renderCart() {
+        // Try/Catch prevents the whole page from going blank if one line fails
+        try {
+            const cartKey = getCartKey();
+            const cartData = localStorage.getItem(cartKey);
+            const cart = cartData ? JSON.parse(cartData) : [];
+
+            const listContainer = document.getElementById('cart-items-list');
+            const summary = document.getElementById('cart-summary');
+            const emptyMsg = document.getElementById('empty-cart-msg');
+            const totalSpan = document.getElementById('total-amount');
+
+            // Safety check: ensure all elements exist before working with them
+            if (!listContainer || !summary || !emptyMsg || !totalSpan) return;
+
+            // Clear current list
+            listContainer.innerHTML = '';
+
+            if (cart.length === 0) {
+                summary.style.display = 'none';
+                emptyMsg.style.display = 'block';
+                return;
+            }
+
+            // Show summary and hide empty message
+            summary.style.display = 'block';
+            emptyMsg.style.display = 'none';
+
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                total += item.price * item.quantity;
+
+                // Built with standard string concatenation to be JSP-safe
+                let itemHtml = '<div class="cart-item">' +
+                    '<div class="item-info">' +
+                    '<img src="' + item.image + '" class="item-img">' +
+                    '<div class="item-details">' +
+                    '<h4>' + item.name + '</h4>' +
+                    '<p>Color: ' + item.color + ' | Storage: ' + item.storage + '</p>' +
+                    '<p>Qty: ' + item.quantity + '</p>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="item-actions">' +
+                    '<span class="item-price">RM ' + (item.price * item.quantity).toFixed(2) + '</span>' +
+                    '<button onclick="removeItem(' + index + ')" class="btn-remove">Remove</button>' +
+                    '</div>' +
+                    '</div>';
+
+                listContainer.innerHTML += itemHtml;
+            });
+
+            totalSpan.innerText = total.toFixed(2);
+        } catch (e) {
+            console.error("Cart render failed:", e);
+        }
+    }
+
+    function removeItem(index) {
+        const cartKey = getCartKey();
+        let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+        cart.splice(index, 1);
+        localStorage.setItem(cartKey, JSON.stringify(cart));
+        renderCart();
+    }
+
+    // Run when page is ready
+    document.addEventListener('DOMContentLoaded', renderCart);
+</script>
+
 </body>
 </html>

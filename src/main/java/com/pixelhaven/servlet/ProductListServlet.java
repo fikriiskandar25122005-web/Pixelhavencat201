@@ -1,9 +1,9 @@
 package com.pixelhaven.servlet;
 
-import com.pixelhaven.dao.PhoneRepository;
 import com.pixelhaven.model.PixelPhone;
+import com.pixelhaven.dao.PhoneRepository;
 
-// NEW IMPORTS FOR TOMCAT 10/11 (JAKARTA)
+// USE JAKARTA FOR TOMCAT 11
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,7 +14,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/catalog")
+// I changed this to "/productList" to match the links in your Home Page
+@WebServlet("/productList")
 public class ProductListServlet extends HttpServlet {
 
     @Override

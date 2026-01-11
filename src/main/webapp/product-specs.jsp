@@ -3,128 +3,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Pixel Haven | Specs</title>
+    <title>Specs | Pixel Haven</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
     <style>
-        /* Reusing your base styles for consistency */
-        body { font-family: 'Roboto', sans-serif; background-color: #f9f9f9; color: #111; margin: 0; padding: 0; }
+        body { font-family: 'Roboto', sans-serif; background-color: #fff; color: #3c4043; margin: 0; padding: 0; }
 
-        /* Navbar */
-        .navbar { background: white; padding: 15px 40px; border-bottom: 1px solid #eee; display: flex; align-items: center; }
-        .logo { font-size: 20px; font-weight: 700; text-decoration: none; color: black; }
-
-        /* Split Layout */
-        .specs-container {
-            max-width: 1000px;
-            margin: 40px auto;
+        /* --- NAVBAR STYLES (Added these so navbar looks correct) --- */
+        .navbar {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            padding: 15px 40px;
             display: flex;
-            overflow: hidden;
-            padding: 40px;
-            gap: 40px;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #eee;
         }
-
-        .left-column { flex: 1; display: flex; align-items: center; justify-content: center; background: #fdfdfd; border-radius: 15px; }
-        .product-hero-img { width: 100%; max-width: 400px; object-fit: contain; }
-
-        .right-column { flex: 1; padding: 10px; }
-
-        .product-title { font-size: 32px; font-weight: 700; margin-bottom: 10px; }
-        .product-desc { color: #666; font-size: 16px; margin-bottom: 30px; line-height: 1.5; }
-
-        .spec-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
-        .spec-table td { padding: 15px 0; border-bottom: 1px solid #eee; font-size: 14px; }
-        .spec-label { font-weight: 700; color: #444; width: 120px; }
-        .spec-value { color: #111; }
-
-        .btn-back {
-            display: inline-block;
-            text-decoration: none;
-            color: #000;
-            border: 1px solid #ddd;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 14px;
-            margin-right: 10px;
-            transition: all 0.2s;
+        .logo { font-size: 20px; font-weight: 700; color: #000; text-decoration: none; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-item { text-decoration: none; color: #5f6368; font-weight: 500; font-size: 14px; text-transform: uppercase; }
+        .nav-item:hover, .nav-item.active { color: #000; }
+        .user-actions { display: flex; align-items: center; }
+        .nav-action { text-decoration: none; color: #000; font-weight: 500; font-size: 14px; }
+        .user-greeting { font-size: 14px; color: #333; font-weight: 500; margin-right: 15px; }
+        .btn-signup {
+            background-color: #000; color: #fff; padding: 8px 24px; border-radius: 50px;
+            text-decoration: none; font-weight: 500; font-size: 14px; margin-left: 20px;
+            transition: background 0.2s;
         }
-        .btn-back:hover { background: #f0f0f0; }
+        .btn-signup:hover { background-color: #333; }
+        /* ----------------------------------------------------------- */
 
-        .btn-add {
-            background: black;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-        }
+        .specs-container { max-width: 800px; margin: 40px auto; padding: 20px; }
+        h1 { font-size: 32px; font-weight: 700; margin-bottom: 10px; text-align: center; }
+        .back-link { display: block; text-align: center; margin-bottom: 40px; color: #1967d2; text-decoration: none; font-weight: 500; }
+
+        .specs-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .specs-table tr { border-bottom: 1px solid #dadce0; }
+        .specs-table td { padding: 24px 0; vertical-align: top; }
+        .spec-label { width: 30%; font-weight: 700; color: #202124; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .spec-value { width: 70%; font-size: 16px; line-height: 1.6; color: #5f6368; }
+        .spec-value ul { padding-left: 20px; margin: 0; }
+        .spec-value li { margin-bottom: 8px; }
     </style>
 </head>
 <body>
 
-<div class="navbar">
-    <a href="catalog.jsp" class="logo">Pixel Haven</a>
-</div>
+<nav class="navbar">
+    <div class="logo">Pixel Haven</div>
+    <div class="nav-links">
+        <a href="index.jsp" class="nav-item">HOME</a>
+        <a href="productList" class="nav-item">PRODUCTS</a>
+        <a href="cart" class="nav-item">CART</a>
+
+        <%
+            String currentUser = (String) session.getAttribute("username");
+            if ("admin1@gmail.com".equals(currentUser)) {
+        %>
+        <a href="admin.jsp" class="nav-item" style="color: #d93025; font-weight: bold;">ADMIN PANEL</a>
+        <% } %>
+    </div>
+
+    <div class="user-actions">
+        <% if (currentUser != null) { %>
+        <span class="user-greeting"><%= currentUser %></span>
+        <a href="logout" class="nav-action">Logout</a>
+        <% } else { %>
+        <a href="login.jsp" class="nav-action">Log In</a>
+        <a href="register.jsp" class="btn-signup">Sign Up</a>
+        <% } %>
+    </div>
+</nav>
 
 <%
     PixelPhone p = (PixelPhone) request.getAttribute("phone");
-    if(p != null) {
+    if (p != null) {
 %>
 
 <div class="specs-container">
-    <div class="left-column">
-        <img src="images/<%= p.getDefaultImageUrl() %>" alt="<%= p.getName() %>" class="product-hero-img">
-    </div>
+    <h1><%= p.getName() %> Tech Specs</h1>
+    <a href="productList" class="back-link">← Back to Products</a>
 
-    <div class="right-column">
-        <div class="product-title"><%= p.getName() %></div>
-        <div class="product-desc"><%= p.getDescription() %></div>
+    <table class="specs-table">
+        <tr>
+            <td class="spec-label">Display</td>
+            <td class="spec-value"><%= p.getDisplaySpecs() %></td>
+        </tr>
 
-        <h3>Technical Specifications</h3>
-        <table class="spec-table">
-            <tr>
-                <td class="spec-label">Series</td>
-                <td class="spec-value"><%= p.getSeries() %></td>
-            </tr>
-            <tr>
-                <td class="spec-label">Starting Price</td>
-                <td class="spec-value">RM <%= String.format("%.2f", p.getDefaultPrice()) %></td>
-            </tr>
-            <tr>
-                <td class="spec-label">Colors</td>
-                <td class="spec-value">
-                    <% for(String color : p.getColorNames()) { %>
-                    <span style="display:inline-block; padding: 4px 10px; background:#f0f0f0; border-radius:12px; margin-right:5px; margin-bottom:5px; font-size:12px;"><%= color %></span>
-                    <% } %>
-                </td>
-            </tr>
-            <tr>
-                <td class="spec-label">Storage</td>
-                <td class="spec-value">
-                    <% for(String storage : p.getStorage()) { %>
-                    <span style="display:inline-block; padding: 4px 10px; border:1px solid #ddd; border-radius:12px; margin-right:5px; font-size:12px;"><%= storage %></span>
-                    <% } %>
-                </td>
-            </tr>
-        </table>
+        <tr>
+            <td class="spec-label">Dimensions & Weight</td>
+            <td class="spec-value"><%= p.getDimensionSpecs() %></td>
+        </tr>
 
-        <a href="catalog.jsp" class="btn-back">← Back to Catalog</a>
+        <tr>
+            <td class="spec-label">Battery & Charging</td>
+            <td class="spec-value"><%= p.getBatterySpecs() %></td>
+        </tr>
 
-        <form action="addToCart" method="post" style="display:inline;">
-            <input type="hidden" name="productId" value="<%= p.getId() %>">
-            <button type="submit" class="btn-add" onclick="alert('Added to Cart!')">Add to Cart</button>
-        </form>
-    </div>
+        <tr>
+            <td class="spec-label">Rear Camera</td>
+            <td class="spec-value"><%= p.getRearCameraSpecs() %></td>
+        </tr>
+
+        <tr>
+            <td class="spec-label">Front Camera</td>
+            <td class="spec-value"><%= p.getFrontCameraSpecs() %></td>
+        </tr>
+    </table>
 </div>
 
 <% } else { %>
-<div style="text-align:center; padding:50px;">
+<div style="text-align: center; margin-top: 50px;">
     <h2>Product Not Found</h2>
-    <a href="catalog.jsp">Return Home</a>
+    <a href="productList">Return to Store</a>
 </div>
 <% } %>
 
